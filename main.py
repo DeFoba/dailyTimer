@@ -1,4 +1,6 @@
 from tkinter import Tk, Label, Entry, Frame, Button, StringVar, LEFT, TOP, BOTTOM, RIGHT
+from threading import Thread
+import time
 # from typing import Optional
 
 class App(Tk):
@@ -44,6 +46,57 @@ class App(Tk):
 
     def click_function(self, event):
         print('Clicked')
+
+    def _thread_timer(self):
+        while True:
+            if int(self.timer_variable_miliseconds.get()) < 99:
+                val1 = int(self.timer_variable_miliseconds.get()) + 1
+                if val1 < 10: val1 = '0' + str(val1)
+
+                self.timer_variable_miliseconds.set(str(val1))
+            else:
+                if int(self.timer_variable_seconds.get()) < 59:
+                    val1 = int(self.timer_variable_seconds.get()) + 1
+                    if val1 < 10: val1 = '0' + str(val1)
+
+                    self.timer_variable_seconds.set(str(val1))
+
+                else:
+                    if int(self.timer_variable_minnutes.get()) < 59:
+                        val1 = int(self.timer_variable_minnutes.get()) + 1
+                        if val1 < 10: val1 = '0' + str(val1)
+
+                        self.timer_variable_minnutes.set(str(val1))
+
+                    else:
+                        if int(self.timer_variable_hours.get()) < 23:
+                            val1 = int(self.timer_variable_hours.get()) + 1
+                            if val1 < 10: val1 = '0' + str(val1)
+
+                            self.timer_variable_hours.set(str(val1))
+                        
+                        else:
+                            if int(self.timer_variable_days.get()) < 100:
+                                val1 = int(self.timer_variable_days.get()) + 1
+                                if val1 < 10: val1 = '0' + str(val1)
+
+                                self.timer_variable_days.set(str(val1))
+
+                            else:
+                                self.timer_variable_days.set('00')
+                        
+                            self.timer_variable_hours.set('00')
+
+
+                        self.timer_variable_minnutes.set('00')
+
+
+                    self.timer_variable_seconds.set('00')
+
+
+                self.timer_variable_miliseconds.set('00')
+
+            time.sleep(0.01)
         
 
     def start_body(self):
@@ -73,7 +126,8 @@ class App(Tk):
             else:
                 self.edit_btn = self._el(Button, self.timer_frame, pack={'side': BOTTOM}, text='Save changes', command=lambda: self.change_label_to_entry(self.timer_elements_label, self.timer_elements_entry))
                 self.edit_btn.pack_forget()
-                pass
+
+        Thread(target=self._thread_timer, daemon=True).start()
             
 
 
